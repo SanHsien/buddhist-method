@@ -1,0 +1,9 @@
+{
+  "repo": "https://github.com/nai0om/buddhist-method.git",
+  "branch": "main",
+  "reviewed_through": "745caa74ef27fce7c57cbdbf27af5add3de884d7",
+  "reviewed_date": "2026-08-30",
+  "notes": "Fork start. Upstream main has two commits; this SHA is the current head (one-shot Claude Code install prompt). No open PRs or issues. Product SKILL.md and references/ kept as-is. 2026-08-30：issue 水位 0 → 1。#1（要 /buddhist 語氣指令）不引用，理由與觸發條件見 docs/DECISIONS.md 同日條目；上游自己以 NOT_PLANNED 關閉。PR 水位維持 0——實查上游 PR 數為 0，是查過為空不是沒查。兩個欄位順便從字串改成整數。",
+  "reviewed_pr_through": 0,
+  "reviewed_issue_through": 1
+}
