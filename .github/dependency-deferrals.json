@@ -1,0 +1,8 @@
+{
+  "deferrals": {
+    "ruff": {
+      "deferredLatest": "0.17.2",
+      "reason": "evaluated 2026-10-25: ruff 0.17.2 passes the CI gate (E9+F) with no changes, but the repo needs no 0.17 feature and the >=0.16 floor still works; revisit when PyPI moves past 0.17.2"
+    }
+  }
+}
