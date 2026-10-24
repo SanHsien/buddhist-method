@@ -20,7 +20,7 @@
 |---|---|
 | `README.md` | 繁中主檔；英文鏡像在 `README.en.md`。上游泰文 `README.th.md` 當產品檔保留；語言指標改指 `README.en.md`；共同開發段加上「產品 PR 去上游」 |
 | `CONTRIBUTING.md` / Issue／PR 模板 | 明寫本 fork 不收產品原則 PR |
-| `AGENTS.md` / `CLAUDE.md` | 本 fork 的 AI 維護單一真相源 |
+| `AGENTS.md` | 本 fork 的 AI 維護單一真相源 |
 | `NOTICE.md` / `FORK.md` | 來源、授權與同步說明 |
 | `tools/dev_check.ps1` | Windows 本機一鍵 gate |
 | `.github/workflows/ci.yml` | Ubuntu 3.9–3.14 + Windows Python 3.14：pytest / ruff / Skill 驗證 / 連結檢查 |
