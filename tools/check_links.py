@@ -24,6 +24,8 @@ HTML_SRC_PATTERN = re.compile(r"""(?is)<img[^>]+src=["']([^"']+)["']""")
 SKILL_PATH_PATTERN = re.compile(
     r"`((?:references)/[A-Za-z0-9._/-]+)`"
 )
+# Fenced blocks and inline code show link syntax as an example, not a link.
+CODE_PATTERN = re.compile(r"(?ms)^[ \t]*(`{3,}|~{3,}).*?^[ \t]*\1[ \t]*$|`[^`\n]*`")
 SKIP_PREFIXES = ("http://", "https://", "mailto:", "tel:", "#")
 
 SKIP_NAMES = {
@@ -49,7 +51,12 @@ def iter_documents() -> list[Path]:
 
 
 def _missing_relative(path: Path, target: str) -> str | None:
-    target = target.strip().strip("<>")
+    target = target.strip()
+    if target.startswith("<") and ">" in target:
+        target = target[1 : target.index(">")]
+    else:
+        # `[t](a.md "Title")`: the destination ends at the first whitespace.
+        target = target.split(None, 1)[0] if target else target
     if not target or target.startswith(SKIP_PREFIXES):
         return None
     file_part = unquote(target.split("#", 1)[0])
@@ -69,7 +76,7 @@ def _missing_relative(path: Path, target: str) -> str | None:
 
 def check_document(path: Path) -> list[str]:
     problems: list[str] = []
-    text = path.read_text(encoding="utf-8")
+    text = CODE_PATTERN.sub("", path.read_text(encoding="utf-8"))
     for pattern in (LINK_PATTERN, IMAGE_PATTERN, HTML_SRC_PATTERN):
         for match in pattern.finditer(text):
             missing = _missing_relative(path, match.group(1))

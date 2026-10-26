@@ -265,3 +265,23 @@ def test_block_scalar_description_that_fits_passes(tmp_path: Path) -> None:
     assert validate_skill.get_scalar(
         "description: >-\n  first\n  second\nname: a", "description"
     ) == "first second"
+
+
+def test_check_links_accepts_link_title(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(check_links, "ROOT", tmp_path)
+    (tmp_path / "a.md").write_text("x", encoding="utf-8")
+    doc = tmp_path / "note.md"
+    doc.write_text('[t](a.md "Title") and [u](a.md#top \'T2\')\n', encoding="utf-8")
+    assert check_links.check_document(doc) == []
+
+
+def test_check_links_ignores_examples_in_code(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(check_links, "ROOT", tmp_path)
+    doc = tmp_path / "note.md"
+    doc.write_text(
+        "```\n[x](nope.md)\n```\n\n`[y](nope2.md)`\n\n[real](missing.md)\n",
+        encoding="utf-8",
+    )
+    problems = check_links.check_document(doc)
+    assert len(problems) == 1
+    assert "missing.md" in problems[0]
