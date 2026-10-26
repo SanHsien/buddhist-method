@@ -114,6 +114,18 @@ def get_list_items(fm, key):
     return items
 
 
+_INLINE_TOOL_RE = re.compile(r"[^\s,()]+(?:\([^)]*\))?")
+
+
+def split_inline_tools(value):
+    """`Read, Grep`, `[Read, Grep]` or `Bash(python3 *) Read` -> one entry per tool.
+
+    A scoped grant such as `Bash(python3 *)` contains a space and must stay one
+    entry; commas and flow-list brackets are separators, not part of a name.
+    """
+    return _INLINE_TOOL_RE.findall(value.strip().strip("[]"))
+
+
 def top_level_keys(fm):
     return [m.group(1) for ln in fm.splitlines()
             if (m := re.match(r"^([A-Za-z][\w-]*):", ln))]
@@ -157,7 +169,7 @@ def audit(path, lens="claude"):
     if not tools:
         inline = get_scalar(fm, "allowed-tools")
         if inline:
-            tools = inline.split()
+            tools = split_inline_tools(inline)
     if tools:  # a restriction is declared -> the host enforces it
         bases = {tool_base(t) for t in tools}
         known = {b for b in bases if b in rules["tools"]}

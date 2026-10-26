@@ -222,3 +222,28 @@ def test_contribution_guides_reject_product_prs_on_this_fork() -> None:
     en = (ROOT / "README.en.md").read_text(encoding="utf-8")
     assert "不要" in zh and "產品 PR" in zh
     assert "does not take those PRs" in en
+
+
+def _audit_frontmatter(tmp_path: Path, frontmatter: str, body: str = "body\n"):
+    skill = tmp_path / "SKILL.md"
+    skill.write_text(f"---\n{frontmatter}\n---\n{body}", encoding="utf-8")
+    return validate_skill.audit(str(skill), lens="claude")
+
+
+def test_inline_allowed_tools_accept_comma_and_flow_lists(tmp_path: Path) -> None:
+    for value in ("Read, Grep", "[Read, Grep]", "Read Grep"):
+        errors, warns = _audit_frontmatter(
+            tmp_path, f"name: a\ndescription: x\nallowed-tools: {value}"
+        )
+        assert errors == [], value
+        assert warns == [], value
+
+
+def test_inline_allowed_tools_keep_scoped_bash_grant_whole(tmp_path: Path) -> None:
+    errors, warns = _audit_frontmatter(
+        tmp_path,
+        "name: a\ndescription: x\nallowed-tools: Bash(python3 *), Read",
+        body="```bash\npython3 run.py\n```\n",
+    )
+    assert errors == []
+    assert warns == []
