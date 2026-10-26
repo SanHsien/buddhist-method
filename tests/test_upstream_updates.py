@@ -113,3 +113,12 @@ def test_upstream_slug(url, expected):
 def test_shipped_baseline_matches_the_documented_upstream():
     baseline = checker.load_baseline()
     assert checker.upstream_slug(baseline["repo"]) is not None
+
+
+def test_missing_gh_binary_reports_not_checked_instead_of_crashing(monkeypatch) -> None:
+    def no_gh(*_args, **_kwargs):
+        raise FileNotFoundError("gh")
+
+    monkeypatch.setattr(checker.subprocess, "run", no_gh)
+    baseline = {"repo": "https://github.com/owner/name.git"}
+    assert checker.collect_new_tickets(baseline, "pr") is None
