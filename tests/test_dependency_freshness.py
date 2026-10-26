@@ -114,3 +114,32 @@ def test_report_names_both_exits_so_the_next_person_does_not_invent_a_third() ->
     assert "freshness-hold:" in report
     assert "dependency-deferrals.json" in report
     assert "mute button" in report
+
+
+def test_deferral_matches_requirement_despite_name_spelling(monkeypatch) -> None:
+    monkeypatch.setattr(checker, "fetch_pypi_version", lambda _name: "5.0.0")
+    packages = [
+        {
+            "name": "Typing_Extensions",
+            "minimum": "4.0",
+            "requirement": "Typing_Extensions>=4.0",
+            "source": "requirements-dev.txt",
+            "hold": "",
+        }
+    ]
+    rows = checker.collect_status(
+        packages, {"typing-extensions": ("5.0.0", "reviewed, not now")}
+    )
+    assert rows[0]["deferred_reason"] == "reviewed, not now"
+    assert not checker.needs_review(rows[0])
+
+
+def test_load_deferrals_normalizes_package_names(tmp_path: Path) -> None:
+    path = tmp_path / "d.json"
+    path.write_text(
+        json.dumps(
+            {"deferrals": {"Typing_Extensions": {"deferredLatest": "5.0", "reason": "r"}}}
+        ),
+        encoding="utf-8",
+    )
+    assert list(checker.load_deferrals(path)) == ["typing-extensions"]
