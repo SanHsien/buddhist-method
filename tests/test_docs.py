@@ -247,3 +247,21 @@ def test_inline_allowed_tools_keep_scoped_bash_grant_whole(tmp_path: Path) -> No
     )
     assert errors == []
     assert warns == []
+
+
+def test_block_scalar_description_is_measured_not_read_as_indicator(tmp_path: Path) -> None:
+    long_text = "word " * 250
+    errors, _warns = _audit_frontmatter(
+        tmp_path, f"name: a\ndescription: >\n  {long_text}\n"
+    )
+    assert any("description" in item and "1024" in item for item in errors)
+
+
+def test_block_scalar_description_that_fits_passes(tmp_path: Path) -> None:
+    errors, _warns = _audit_frontmatter(
+        tmp_path, "name: a\ndescription: |-\n  first line\n  second line"
+    )
+    assert errors == []
+    assert validate_skill.get_scalar(
+        "description: >-\n  first\n  second\nname: a", "description"
+    ) == "first second"

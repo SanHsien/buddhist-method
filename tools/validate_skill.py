@@ -94,9 +94,25 @@ def parse_frontmatter(text):
     return text[3:end].lstrip("\n"), text[end + 4:]
 
 
+_BLOCK_INDICATOR_RE = re.compile(r"^[>|][+-]?\d?$")
+
+
 def get_scalar(fm, key):
-    m = re.search(rf"^{re.escape(key)}:\s*(.*)$", fm, re.MULTILINE)
-    return m.group(1).strip().strip('"').strip("'") if m else None
+    m = re.search(rf"^{re.escape(key)}:[ \t]*(.*)$", fm, re.MULTILINE)
+    if not m:
+        return None
+    value = m.group(1).strip()
+    if _BLOCK_INDICATOR_RE.match(value):
+        # YAML block scalar: the text is the indented lines that follow, not
+        # the `>` / `|` indicator. Folded (`>`) joins lines with spaces.
+        parts = []
+        for ln in fm[m.end():].splitlines()[1:]:
+            if ln.strip() and not ln[:1].isspace():
+                break
+            parts.append(ln.strip())
+        joiner = "\n" if value.startswith("|") else " "
+        return joiner.join(part for part in parts if part)
+    return value.strip('"').strip("'")
 
 
 def get_list_items(fm, key):
