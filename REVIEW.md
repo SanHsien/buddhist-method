@@ -8,6 +8,15 @@
 - Primary environment: Windows 11、PowerShell、Python 3.14（本機 gate 與 CI Windows job）；Ubuntu CI 補 3.9–3.14
 - Status: 維護骨架可用。產品 `SKILL.md`、`references/` 未改寫。訪客導流已修。本輪 **不回貢**。本次僅自審（未跑跨模型二審）。
 
+## 2026-11-02 依賴覆核補註
+
+- 基準：`f5d09920a157c9f00f97ce15ac85569455fb1d08` 之上的依賴政策維護；原有 2026-08-28 快照與 Actions URL 僅代表當時結果。
+- 保留 Python 3.9–3.14、`pytest>=8.3.0`、`ruff>=0.16` 及 `py39`。支援決定與來源見 [`docs/DECISIONS.md`](docs/DECISIONS.md) 同日記錄。
+- 系統暫存 venv：Python 3.9 使用 pytest 8.4.2，3.10–3.14 使用 pytest 9.2.0，均搭配 ruff 0.17.3；六組各 51 passed，compileall、Ruff E9+F、Skill 與連結檢查均 exit 0。
+- 宣告下限另以 Python 3.9、pytest 8.3.0、ruff 0.16.0 實測：51 passed、lint exit 0。Python 3.14 完整 Windows gate exit 0，結尾 `WINDOWS DEV CHECK GREEN`。
+- freshness 原先 exit 1（ruff 0.17.3 超出 0.17.2）；實測後才更新精確延後水位與理由。不改 requirements，也不以提高下限消音。
+- 本次為依賴政策維護，未修改程式或新增 bug 回歸測試；僅自審。不回貢，亦不宣稱新增宿主行為證據；本節只記錄上列本機實測。
+
 ## 結論
 
 這個 fork 適合作為 Windows 本機安裝、並追蹤上游佛教工作紀律 Skill 的維護線。產品是一份英文 `SKILL.md`（137 行，`description` 956 字元）加兩份 `references/`，沒有 CLI 或後端。授權是 MIT（原作 Copyright Udomsak；overlay 另加 SanHsien）。

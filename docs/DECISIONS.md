@@ -113,3 +113,17 @@ name Buddhist principles」。把它做成要打指令才生效的語氣皮膚�
 
 **觸發條件**：本 skill 哪天真的加入語氣／人格模式（現在沒有），或上游重開這個 issue 並實作，
 再回來重評。
+
+## 2026-11-02：保留 Python 3.9–3.14 與開發依賴下限
+
+**觸發**：開工前 `python tools/check_dependency_freshness.py --strict` 回 exit 1；PyPI ruff 0.17.3 超過既有延後水位 0.17.2，pytest 最新為 9.2.0。
+
+**支援矩陣決定（候選測試前）**：保留 Ubuntu CI Python 3.9–3.14、Windows Python 3.14 與 Ruff `py39` 目標。產品是 Markdown Skill，沒有新需求或失敗證據支持移除 Python 3.9；不以 pytest 9 的工具需求縮減既有支援承諾。
+
+**相容下限決定**：保留 `pytest>=8.3.0` 與 `ruff>=0.16`。pytest 9.2.0 的 PyPI metadata 要求 Python >=3.10，既有 pytest freshness-hold 仍成立；Python 3.9 由安裝器依 Requires-Python 選相容版本。驗證最新候選不代表最低版本應提高。
+
+**候選驗收方式**：系統暫存目錄分別建立 Python 3.9–3.14 venv，依原 requirements 安裝最新相容依賴，重現 CI 的 compileall、Ruff E9+F / py39、pytest、Skill 與連結檢查；Python 3.14 另跑完整 Windows gate。確認通過後才更新 ruff 的精確延後水位。
+
+**查證來源**：[pytest changelog](https://docs.pytest.org/en/stable/changelog.html)、[pytest PyPI metadata](https://pypi.org/pypi/pytest/9.2.0/json)、[ruff 0.17.3 release notes](https://github.com/astral-sh/ruff/releases/tag/0.17.3)、[ruff PyPI metadata](https://pypi.org/pypi/ruff/0.17.3/json)。ruff 此版的 preview、UP032 修正與 formatter 效能改動未要求本 repo 啟用新規則或提高相容下限。
+
+**驗收結果**：Windows 的 Python 3.9、3.10、3.11、3.12、3.13、3.14 暫存 venv 均通過上述 CI 同等步驟（各 51 passed；Ruff、compileall、Skill 與連結檢查均 exit 0）。Python 3.9 實際解析為 pytest 8.4.2，其餘為 9.2.0；Ruff 均為 0.17.3。另以 Python 3.9、pytest 8.3.0、ruff 0.16.0 驗證宣告下限，51 passed 與 lint 均 exit 0。Python 3.14 完整 `pwsh -NoProfile -File tools/dev_check.ps1` 回 exit 0、`WINDOWS DEV CHECK GREEN`。因此將 ruff `deferredLatest` 由 0.17.2 更新為 0.17.3，保留精確 patch 精度與理由；requirements、CI 矩陣及 Ruff 目標不變。這是本機 Windows 驗收。

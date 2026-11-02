@@ -7,6 +7,8 @@
 
 本 repo 用佛教認識論原則約束 Agent 的查證、除錯與抗壓工作紀律，產品為 `SKILL.md` 與 `references/`，沒有獨立 CLI 或後端（`AGENTS.md:7-8,26-30`）。2026-10-29 快照 open PR、Dependabot／code scanning 告警均為 0，CI、CodeQL、Dependency freshness、Upstream check 最近結果為 success；issue 因停用而未查到（2026-10-29 `gh` 查詢，`d4f334ae015d`）。目前尚未以宿主完整任務證明原則改變行為，裝包與靜態 gate 不能取代該證據（`REVIEW.md`〈尚未宣稱範圍〉）。
 
+2026-11-02 已重審依賴與支援矩陣：保留 Python 3.9–3.14、pytest／ruff 宣告下限；最新相容依賴與 Windows gate 通過，ruff 延後水位更新至 0.17.3（見 `docs/DECISIONS.md` 同日決策）。此為本機驗收，未刷新上述 GitHub 快照。
+
 ## 近期：可以直接動手
 
 | 項目 | 為什麼 | 驗收方式 | 建議執行者 | 證據 |
@@ -18,7 +20,6 @@
 | 項目 | 觸發條件 | 驗收方式 | 建議執行者 | 證據 |
 | --- | --- | --- | --- | --- |
 | 逐筆審查上游更新 | 上游超出 baseline，或已審項目 head／內容改變 | 跑 `python tools/check_upstream_updates.py --strict`，核對產品原則與 references、記錄取捨；Windows gate 通過後才推進水位 | Codex | `tools/upstream_baseline.json`；`AGENTS.md:47-62`；`docs/UPSTREAM.md`〈審查清冊〉 |
-| 重審 pytest 相容下限與 ruff 延後 | 支援範圍決定移除 Python 3.9，或 freshness 報告出現超出延後記錄的新版本 | 先更新支援矩陣的決定，再以候選依賴跑對應 CI 與 `pwsh -NoProfile -File tools/dev_check.ps1`；同步理由，不靠提高下限消音 | Claude Sonnet | `requirements-dev.txt:1-3`；接續開發報告（2026-10-25）〈刻意不做／延後〉 |
 | 補少見 YAML／Markdown 解析案例 | 實際 skill 或維護文件出現 block scalar 指示符、巢狀 scoped grant 或特殊 fence，且產生可重現誤報 | 對實際格式先補回歸案例，維持缺少授權與過長 description 的拒絕行為；Windows gate 通過 | Codex | 深掃報告〈刻意不修〉；`2841b2c`、`4974a01`、`7a429bd` |
 
 ## 刻意不做

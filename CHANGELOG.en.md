@@ -11,6 +11,13 @@ adopt/skip reasoning is recorded in [`docs/DECISIONS.md`](docs/DECISIONS.md).
 
 ---
 
+## 2026-11-02
+
+### Changed
+
+- Retained Python 3.9–3.14 support and the pytest/ruff requirement floors after testing the latest compatible dependencies and the original floors in temporary virtual environments, plus the full Windows gate.
+- Advanced the reviewed ruff deferral from 0.17.2 to 0.17.3; synchronized the support rationale, review addendum, and roadmap. The pytest freshness-hold still records pytest 9's Python >=3.10 requirement.
+
 ## 2026-08-28 (fix review findings)
 
 ### Fixed

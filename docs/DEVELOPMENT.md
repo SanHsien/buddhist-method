@@ -27,6 +27,8 @@ pwsh -NoProfile -File tools\dev_check.ps1
 
 先決條件：Python 3.14（CI 另測 3.9–3.14）、PowerShell 7。
 
+支援矩陣於 2026-11-02 重審後維持不變（見 [`DECISIONS.md`](DECISIONS.md) 同日決策）。開發依賴下限仍為 `pytest>=8.3.0`、`ruff>=0.16`；Python 3.9 安裝最新相容的 pytest 8.x，Python 3.10–3.14 可使用 pytest 9.x。pytest 9 要求 Python >=3.10，因此保留宣告行的 freshness-hold，不為工具版本移除 Python 3.9 或提高下限。
+
 只驗證產品入口是否齊全時，確認：
 
 - `SKILL.md`
@@ -55,7 +57,7 @@ CI 在 Ubuntu 跑 3.9–3.14，並加一個 Windows Python 3.14 job 跑同一套
 
 ## 依賴新鮮度
 
-`tools/check_dependency_freshness.py` 把 `requirements-dev.txt` 宣告的每一筆直接依賴拿去對 PyPI 現行版本，`.github/workflows/dependency-freshness.yml` 每月跑一次。紅燈只有兩條誠實出口：`# freshness-hold:`（常態政策）或 `.github/dependency-deferrals.json` 的 `deferredLatest`（會過期）。調高宣告下限來讓報告變綠不是出口。
+`tools/check_dependency_freshness.py` 把 `requirements-dev.txt` 宣告的每一筆直接依賴拿去對 PyPI 現行版本，`.github/workflows/dependency-freshness.yml` 每月跑一次。紅燈只有兩條誠實出口：`# freshness-hold:`（常態政策）或 `.github/dependency-deferrals.json` 的 `deferredLatest`（會過期）。調高宣告下限來讓報告變綠不是出口。2026-11-02 已在暫存 venv 驗證 ruff 0.17.3 與各 Python 的最新相容 pytest，將 ruff 延後水位更新至 0.17.3；PyPI 超出該版本即重新亮紅燈，理由與驗收見 [`DECISIONS.md`](DECISIONS.md)。
 
 ## 不要做的事
 
