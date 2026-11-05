@@ -127,3 +127,11 @@ name Buddhist principles」。把它做成要打指令才生效的語氣皮膚�
 **查證來源**：[pytest changelog](https://docs.pytest.org/en/stable/changelog.html)、[pytest PyPI metadata](https://pypi.org/pypi/pytest/9.2.0/json)、[ruff 0.17.3 release notes](https://github.com/astral-sh/ruff/releases/tag/0.17.3)、[ruff PyPI metadata](https://pypi.org/pypi/ruff/0.17.3/json)。ruff 此版的 preview、UP032 修正與 formatter 效能改動未要求本 repo 啟用新規則或提高相容下限。
 
 **驗收結果**：Windows 的 Python 3.9、3.10、3.11、3.12、3.13、3.14 暫存 venv 均通過上述 CI 同等步驟（各 51 passed；Ruff、compileall、Skill 與連結檢查均 exit 0）。Python 3.9 實際解析為 pytest 8.4.2，其餘為 9.2.0；Ruff 均為 0.17.3。另以 Python 3.9、pytest 8.3.0、ruff 0.16.0 驗證宣告下限，51 passed 與 lint 均 exit 0。Python 3.14 完整 `pwsh -NoProfile -File tools/dev_check.ps1` 回 exit 0、`WINDOWS DEV CHECK GREEN`。因此將 ruff `deferredLatest` 由 0.17.2 更新為 0.17.3，保留精確 patch 精度與理由；requirements、CI 矩陣及 Ruff 目標不變。這是本機 Windows 驗收。
+
+## 2026-11-05：Python 3.9 的 CI 測試矩陣釘在 ubuntu-24.04
+
+**決定**：`.github/workflows/ci.yml` 中矩陣內 `python-version == '3.9'` 的 leg（`runs-on` 以條件式選 runner）改在 `ubuntu-24.04` 執行；其他 Python 版本與 Windows／macOS 不動。
+
+**理由**：`ubuntu-latest` 已換成 Ubuntu 26.04，`actions/setup-python` 在該映像沒有 Python 3.9（官方 versions-manifest 的 3.9.25 只有 22.04、24.04），Set up Python 步驟會失敗：`The version '3.9' with architecture 'x64' was not found for Ubuntu 26.04`。此舉保住既有 Python 3.9 支援宣告的測試，不縮減矩陣。
+
+**重審條件**：`ubuntu-24.04` runner 退役或停止支援 Python 3.9、`setup-python` 補上 26.04 的 3.9 build、或決定放棄 Python 3.9 支援時，移除此釘版。
