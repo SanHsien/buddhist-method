@@ -1,19 +1,19 @@
 # 路線圖
 
 > 本 repo 後續工作的單一真相源。做完一項，就在同一個 commit 刪掉那一列；新工作只加在這裡。
-> 現況段的數字是 2026-10-29 依 `main` `d4f334ae015d` 查的快照，開工前先重查 GitHub。
+> 現況段的數字是 2026-11-08 依 `main` `6ea02ba` 查的快照，開工前先重查 GitHub。
 
 ## 現況
 
-本 repo 用佛教認識論原則約束 Agent 的查證、除錯與抗壓工作紀律，產品為 `SKILL.md` 與 `references/`，沒有獨立 CLI 或後端（`AGENTS.md:7-8,26-30`）。2026-10-29 快照 open PR、Dependabot／code scanning 告警均為 0，CI、CodeQL、Dependency freshness、Upstream check 最近結果為 success；issue 因停用而未查到（2026-10-29 `gh` 查詢，`d4f334ae015d`）。目前尚未以宿主完整任務證明原則改變行為，裝包與靜態 gate 不能取代該證據（`REVIEW.md`〈尚未宣稱範圍〉）。
+本 repo 用佛教認識論原則約束 Agent 的查證、除錯與抗壓工作紀律，產品為 `SKILL.md` 與 `references/`，沒有獨立 CLI 或後端（`AGENTS.md:7-8,26-30`）。issue 因停用而未查到（2026-10-29 `gh` 查詢）。目前尚未以宿主完整任務證明原則改變行為，裝包與靜態 gate 不能取代該證據（`REVIEW.md`〈尚未宣稱範圍〉）。
 
-2026-11-02 已重審依賴與支援矩陣：保留 Python 3.9–3.14、pytest／ruff 宣告下限；最新相容依賴與 Windows gate 通過，ruff 延後水位更新至 0.17.3（見 `docs/DECISIONS.md` 同日決策）。此為本機驗收，未刷新上述 GitHub 快照。
+2026-11-02 已重審依賴與支援矩陣：保留 Python 3.9–3.14、pytest／ruff 宣告下限；最新相容依賴與 Windows gate 通過，ruff 延後水位更新至 0.17.3（見 `docs/DECISIONS.md` 同日決策）。2026-11-08 重查：open PR 0、Dependabot 與 code scanning open alert 0，`main` 最近的 CI、CodeQL、Dependency freshness 皆 success（`gh pr list`、`gh api .../dependabot/alerts`、`gh run list -b main`）。
 
 ## 近期：可以直接動手
 
 | 項目 | 為什麼 | 驗收方式 | 建議執行者 | 證據 |
 | --- | --- | --- | --- | --- |
-| 補單一宿主的完整任務驗收 | 現有證據只到裝包與規格檢查，尚缺實際觸發與行為證據 | 維護者選定 Cursor／Claude Code／Codex 其中之一及一個有可查根因的小任務；記錄實際讀取 skill、先查證再修正及壓力下維持證據的過程，標註宿主與 SHA；只宣稱觀察到的範圍 | 維護者 | `REVIEW.md`〈尚未宣稱範圍〉；`README.md`〈安裝 Skill（本機呼叫）〉；`AGENTS.md:39` |
+| 在 Claude Code 完成單一宿主完整任務驗收 | 現有證據只到裝包與規格檢查，尚缺實際觸發與行為證據；宿主與任務已由 [`docs/DECISIONS.md`](docs/DECISIONS.md) 2026-11-08 決定 | 照該決策的做法跑一輪 fresh session；記錄實際讀取 skill、先重現與查根因再修正、被催促時維持證據的過程，標註宿主版本與本 repo SHA；結果寫進 `REVIEW.md`〈尚未宣稱範圍〉，只宣稱觀察到的範圍 | Claude Opus | `docs/DECISIONS.md` 2026-11-08；`REVIEW.md`〈尚未宣稱範圍〉；`README.md`〈安裝 Skill（本機呼叫）〉 |
 
 ## 中期：等條件成立再做
 

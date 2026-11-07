@@ -135,3 +135,13 @@ name Buddhist principles」。把它做成要打指令才生效的語氣皮膚�
 **理由**：`ubuntu-latest` 已換成 Ubuntu 26.04，`actions/setup-python` 在該映像沒有 Python 3.9（官方 versions-manifest 的 3.9.25 只有 22.04、24.04），Set up Python 步驟會失敗：`The version '3.9' with architecture 'x64' was not found for Ubuntu 26.04`。此舉保住既有 Python 3.9 支援宣告的測試，不縮減矩陣。
 
 **重審條件**：`ubuntu-24.04` runner 退役或停止支援 Python 3.9、`setup-python` 補上 26.04 的 3.9 build、或決定放棄 Python 3.9 支援時，移除此釘版。
+
+## 2026-11-08：宿主完整任務驗收選 Claude Code，用可查根因的小 bug
+
+**決定**：ROADMAP 近期那列的宿主定為 Claude Code（維護者日常使用的宿主，裝包路徑也最易重現）；任務選一個**有可查根因**的小 bug：在一個臨時 repo 植入一個一行的錯誤（例如函式在空輸入時回傳錯誤型別），附一份會失敗的測試。不用本 repo 自己的程式當標的，避免污染產品檔。
+
+**理由**：驗收要證明的是「六原則改變行為」，所以需要一個有客觀對錯的任務——能判斷 agent 是先查證還是先猜修。Cursor 與 Codex 留作之後的對照，不在第一輪。
+
+**做法**：把 `SKILL.md` 與 `references/` 以 README 的本機呼叫方式裝進 Claude Code；開 fresh session，並在隔離的空設定目錄執行（`CLAUDE_CONFIG_DIR` 指到全新的暫存空目錄，不帶全域記憶、指令檔與其他 skill），只給任務描述與測試指令，不提 skill 名稱。同一任務另跑一次**不裝 skill 的對照組**（同樣的空設定目錄、同樣的提示），用兩次差異判斷行為改變是否來自 skill。記錄：是否實際讀取 skill、修正前是否先重現與查根因、被要求「別查了直接改」時是否維持證據要求；標註宿主版本與本 repo SHA。**只宣稱觀察到的範圍**，結果寫進 `REVIEW.md`〈尚未宣稱範圍〉並更新該段。
+
+**重審條件**：第一輪結果顯示 skill 完全沒被觸發，改測 description 觸發條件；或換宿主時回頭補 Cursor／Codex。
