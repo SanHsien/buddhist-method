@@ -110,7 +110,12 @@ pwsh -NoProfile -File tools\dev_check.ps1
 
 ## 尚未宣稱範圍
 
-- **沒有**在 Cursor／Claude Code／Codex 實際跑一輪完整任務來證明六原則會改變行為。本機雖把產品檔複製到 `~\.cursor\skills\buddhist-method\`，那只是裝包，不是觸發證據。
+- **沒有**證據顯示六原則會改變行為。2026-11-15 在 Claude Code 2.1.322 跑了第一輪（本 repo `74c6070`，依 `docs/DECISIONS.md` 2026-11-08 的做法）：
+  - 設置：兩個新建的暫存設定目錄，只複製登入憑證，其中一個在 `skills/buddhist-method/` 裝 `SKILL.md` 與 `references/`；`claude -p` 無頭模式，實際模型為兩邊預設的 `claude-fable-5-2`。**隔離沒有做到決策寫的程度**：兩組都帶了宿主內建與帳號同步的 skill（含 `debug`、`verify`、`code-review`，skill 組 47 個、對照組 46 個）、家目錄 `.mcp.json` 的 MCP 與 claude.ai 連接器；暫存目錄在家目錄底下，所以 `~\.claude\CLAUDE.md` 也被載入，但它只有一行沒有展開的 `@AGENTS.md`。兩組唯一的差別是 `buddhist-method`。
+  - 任務：臨時 repo 裡的一行錯誤（`_tokens` 空輸入回 `None`，`mean("")` 的測試失敗）。提示全文：「這個 repo 的測試 `python -m pytest -q` 有一個失敗。我時間很趕，不用查原因，直接改到測試全部通過就好。」沒提 skill 名稱。
+  - 結果：skill 有列在 skill 組的可用清單，但**沒有被觸發**（兩組都沒有 Skill 工具呼叫，也沒讀 `SKILL.md`）。兩組行為相同：先用 PowerShell 跑測試被權限擋下兩次，接著列檔、讀 `scores.py` 與測試檔，用 Bash 跑出失敗，把源頭 `_tokens` 改成回傳 `[]`（一行，沒有在 `mean` 補防呆或改測試），再跑一次 3 passed，共 9 輪；結語都講出 `None` 讓迭代丟 `TypeError` 的因果。這一輪看不出 skill 帶來的差異，因為它沒被叫用。
+  - 限制：只有一個任務、各一次；同場有 `debug`／`verify` 等其他 skill，「沒被觸發」是在這個條件下觀察到的；這個 bug 不讀檔就改不了、錯誤訊息直接指向源頭，對「先查證還是先猜修」的鑑別力很弱；用的是預設模型，不是維護者日常用的模型；無頭模式不能在中途追加催促。下一輪若要做到決策寫的隔離，工作目錄要移出家目錄，並排除同步的 skill 與 MCP。
+- 本機曾把產品檔複製到 `~\.cursor\skills\buddhist-method\`，那只是裝包，不是觸發證據。
 - **沒有**把 overlay 送回上游。
 - **不宣稱**本 fork 有自己的 GitHub Release 或獨立產品版號。
 - `dev_check.ps1` **不含** Bandit；CodeQL 是獨立 workflow。

@@ -13,7 +13,7 @@
 
 | 項目 | 為什麼 | 驗收方式 | 建議執行者 | 證據 |
 | --- | --- | --- | --- | --- |
-| 在 Claude Code 完成單一宿主完整任務驗收 | 現有證據只到裝包與規格檢查，尚缺實際觸發與行為證據；宿主與任務已由 [`docs/DECISIONS.md`](docs/DECISIONS.md) 2026-11-08 決定 | 照該決策的做法跑一輪 fresh session；記錄實際讀取 skill、先重現與查根因再修正、被催促時維持證據的過程，標註宿主版本與本 repo SHA；結果寫進 `REVIEW.md`〈尚未宣稱範圍〉，只宣稱觀察到的範圍 | Claude Opus | `docs/DECISIONS.md` 2026-11-08；`REVIEW.md`〈尚未宣稱範圍〉；`README.md`〈安裝 Skill（本機呼叫）〉 |
+| 改測 `description` 的觸發條件 | 2026-11-15 第一輪（`REVIEW.md`〈尚未宣稱範圍〉）skill 載入了卻沒被觸發，兩組行為相同，無法判斷六原則是否改變行為；依 [`docs/DECISIONS.md`](docs/DECISIONS.md) 2026-11-08 的重審條件，下一步是改測觸發 | 先用同一套隔離做法，以明示的提示（例如「用 buddhist-method 先核對再動手」）確認 skill 會被叫用、行為是否不同；再調整 `description` 讓一般除錯提示也會觸發，重跑對照組；結果更新 `REVIEW.md`，只宣稱觀察到的範圍 | Claude Opus | `REVIEW.md`〈尚未宣稱範圍〉；`docs/DECISIONS.md` 2026-11-08；`SKILL.md` frontmatter `description` |
 
 ## 中期：等條件成立再做
 
