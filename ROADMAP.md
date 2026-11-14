@@ -13,7 +13,7 @@
 
 | 項目 | 為什麼 | 驗收方式 | 建議執行者 | 證據 |
 | --- | --- | --- | --- | --- |
-| 改測 `description` 的觸發條件 | 2026-11-15 第一輪（`REVIEW.md`〈尚未宣稱範圍〉）skill 載入了卻沒被觸發，兩組行為相同，無法判斷六原則是否改變行為；依 [`docs/DECISIONS.md`](docs/DECISIONS.md) 2026-11-08 的重審條件，下一步是改測觸發 | 先用同一套隔離做法，以明示的提示（例如「用 buddhist-method 先核對再動手」）確認 skill 會被叫用、行為是否不同；再調整 `description` 讓一般除錯提示也會觸發，重跑對照組；結果更新 `REVIEW.md`，只宣稱觀察到的範圍 | Claude Opus | `REVIEW.md`〈尚未宣稱範圍〉；`docs/DECISIONS.md` 2026-11-08；`SKILL.md` frontmatter `description` |
+| 找一個對照組會走捷徑的任務，確認 skill 是否改變行為 | 2026-11-15 兩輪（`REVIEW.md`〈尚未宣稱範圍〉）：`claude-fable-5-2` 與 `claude-haiku-5-5` 不論有沒有 skill 都先查根因、不走捷徑，簡單的單檔誤導 bug 沒有鑑別力；明示時 skill 會被叫用，一般除錯說法不會自動觸發。在證明效果之前改寫 `description` 讓它更容易觸發沒有意義 | 先只跑對照組找任務，直到對照組多數會走捷徑（例如多檔、錯誤堆疊指向錯的模組、需要先重現才知道的時序或環境問題、或在對話中途追加催促的互動式情境）；找到後在同一任務與隔離做法下跑明示叫用組各 3～5 次比較修法。看得出差異才改寫 `description`；結果更新 `REVIEW.md`，只宣稱觀察到的範圍 | Claude Opus | `REVIEW.md`〈尚未宣稱範圍〉；`docs/DECISIONS.md` 2026-11-08 |
 
 ## 中期：等條件成立再做
 
