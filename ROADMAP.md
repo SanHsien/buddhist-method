@@ -18,7 +18,7 @@
 | 項目 | 觸發條件 | 驗收方式 | 建議執行者 | 證據 |
 | --- | --- | --- | --- | --- |
 | 補少見 YAML／Markdown 解析案例 | 實際 skill 或維護文件出現 block scalar 指示符、巢狀 scoped grant 或特殊 fence，且產生可重現誤報 | 對實際格式先補回歸案例，維持缺少授權與過長 description 的拒絕行為；Windows gate 通過 | Codex | 深掃報告〈刻意不修〉；`2841b2c`、`4974a01`、`7a429bd` |
-| 逐筆審查上游更新 | 觸發條件已成立（2026-11-21 查：`python tools/check_upstream_updates.py --strict` exit 1：上游新 PR #2、#3 待分流（commit 軸無新 commit）；`Upstream check` 2026-11-20 failure）。原條件：上游超出 baseline，或已審項目 head／內容改變 | 跑 `python tools/check_upstream_updates.py --strict`，核對產品原則與 references、記錄取捨；Windows gate 通過後才推進水位 | Codex | `tools/upstream_baseline.json`；`AGENTS.md:47-62`；`docs/UPSTREAM.md`〈審查清冊〉 |
+| 逐筆審查上游更新 | 上游超出 baseline，或 `monitored` 釘住的 PR #2、#3 head／state 漂移（2026-11-21 已審至 PR #3，兩項 watch，見 `docs/DECISIONS.md` 同日條目） | 跑 `python tools/check_upstream_updates.py --strict`，核對產品原則與 references、記錄取捨；Windows gate 通過後才推進水位 | Codex | `tools/upstream_baseline.json`；`AGENTS.md:47-62`；`docs/UPSTREAM.md`〈審查清冊〉 |
 
 ## 刻意不做
 

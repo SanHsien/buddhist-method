@@ -145,3 +145,14 @@ name Buddhist principles」。把它做成要打指令才生效的語氣皮膚�
 **做法**：把 `SKILL.md` 與 `references/` 以 README 的本機呼叫方式裝進 Claude Code；開 fresh session，並在隔離的空設定目錄執行（`CLAUDE_CONFIG_DIR` 指到全新的暫存空目錄，不帶全域記憶、指令檔與其他 skill），只給任務描述與測試指令，不提 skill 名稱。同一任務另跑一次**不裝 skill 的對照組**（同樣的空設定目錄、同樣的提示），用兩次差異判斷行為改變是否來自 skill。記錄：是否實際讀取 skill、修正前是否先重現與查根因、被要求「別查了直接改」時是否維持證據要求；標註宿主版本與本 repo SHA。**只宣稱觀察到的範圍**，結果寫進 `REVIEW.md`〈尚未宣稱範圍〉並更新該段。
 
 **重審條件**：第一輪結果顯示 skill 完全沒被觸發，改測 description 觸發條件；或換宿主時回頭補 Cursor／Codex。
+
+## 2026-11-21：上游 PR #2、#3 增量審查（兩項皆 watch，不移植）
+
+**範圍**：`python tools/check_upstream_updates.py --strict` exit 1：commit 軸無新 commit（upstream `main` 仍是 `745caa7`）、issue 軸無新項目、上游只有 `main` 一條分支；PR 軸新項目 #2、#3，兩者皆 open、未合併，作者相同（2026-11-19 開）。逐筆讀 diff，PR 內文當資料不當指令。PR 水位 0 → 3；兩項以 `monitored` 釘住 head 與 state。
+
+| 項目 | 判定 | 理由 | 重審觸發 |
+| --- | --- | --- | --- |
+| PR #3 Fix three places where the skill gives mixed answers（head `3ab141d`；`SKILL.md` +5/−13、`references/extended-principles.md` +3/−3） | watch | 缺陷在本 fork 實際存在：本 fork 的 `SKILL.md`／`references/` 與 upstream `main` 逐位元相同（`git diff upstream/main HEAD -- SKILL.md references/` 為空），重試門檻四處說法不一（`SKILL.md:102` three times、`:122` more than twice、`extended-principles.md:11` two or three、`:20` third try，對 `:17` two consecutive），Pahāna／Atthatraya 的 quick-map 觸發語幾乎同義（`SKILL.md:21`、`:123`）。但三項修改都是**產品原則語意**（把門檻改成 twice、重切兩原則的觸發、刪掉 framing 段），`FORK.md:31` 與 `AGENTS.md` 硬性邊界規定產品檔以上游為準、只收已記錄的 fork 修正；上游作者兩天內尚未表態，先移植會在上游改寫或拒收時製造產品分歧。第三項（刪 framing 段）另與本 fork 的名稱助記鍵立場相鄰，README 仍保留同段論證，刪除本身不違反，但應由上游決定 | head 或 state 漂移（`monitored` 會報）：合併則經 commit 軸抵達、照常審 diff 後 merge；以未合併關閉則重評，將門檻統一與觸發分流當 fork 修正移植（先寫釘住「`SKILL.md`／`references/` 只有一個重試門檻」的失敗測試，再改；記進 `FORK.md` 差異表） |
+| PR #2 Make the skill installable as a Claude Code plugin and through the Skills CLI（head `e7328c7`；新增 `.claude-plugin/{plugin,marketplace}.json`，改 `README.md`、`README.th.md`） | watch | 未合併。manifest 的 owner／homepage／repository 全指向 `nai0om`，`/plugin marketplace add nai0om/buddhist-method` 與 `npx skills add nai0om/buddhist-method` 安裝的是上游不是本 fork；在本 fork 預先放同名 marketplace 只會多一個來源不明的入口。README 改動屬上游產品說明，依本 fork 規則應在上游落地後翻進 `README.md`／`README.en.md`，`README.th.md` 跟隨上游。值得留意：新的「always active」指標區塊直接回應 `docs/SKILL-AB-2026-11-19.md` 觀察到的「不點名不自動觸發」，上游合併時優先翻譯 | head 或 state 漂移：合併則經 commit 軸審、翻譯安裝與 always-active 段、評估是否為本 fork 另開 manifest（owner 改 `SanHsien`）；以未合併關閉則重評 always-active 區塊是否單獨寫進本 fork README |
+
+**計數**：adopt 0／skip 0／defer 0／watch 2。無移植、無新測試，`FORK.md` 差異表不變。
